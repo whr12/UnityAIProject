@@ -1,0 +1,81 @@
+# ============================================ #
+#          Unity .gitignore (Official)          #
+# ============================================ #
+
+# --- Unity generated --- #
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# --- MemoryCaptures --- #
+[Mm]emoryCaptures/
+
+# --- Asset meta data should always be tracked --- #
+# !*.meta   <-- 不要忽略 .meta 文件，这是 Unity 的资源 GUID 索引
+
+# --- Visual Studio / Rider --- #
+.vs/
+.vscode/
+*.csproj
+*.sln
+*.unityproj
+*.booproj
+*.svd
+*.pidb
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+[Bb]in/
+obj/
+
+# Rider
+.idea/
+
+# --- OS generated --- #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# --- Crashlytics --- #
+CrashlyticsBuildLog.csv
+
+# --- JetBrains --- #
+*.jsb
+
+# --- Gradle (Android) --- #
+*.gradle
+gradle/
+gradlew
+gradlew.bat
+
+# --- Xcode (iOS/Mac) --- #
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.pbxuser
+*.xcworkspace
+xcuserdata/
+
+# --- Unity Connect / Cloud Build --- #
+[Uu]nityConnect/
+[Uu]nityCloudBuild/
+
+# --- Package Manager (Packages 目录下的 manifest 和 packages-lock 应保留) --- #
+# Packages/manifest.json    <-- 保留，这是项目依赖列表
+# Packages/packages-lock.json  <-- 保留（如有）
+# Library/PackageCache/ 已在上方的 [Ll]ibrary/ 规则中被忽略
