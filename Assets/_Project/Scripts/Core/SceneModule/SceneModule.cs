@@ -38,7 +38,7 @@ namespace AIProject.Core
         {
             var oldScene = _currentScene;
 
-            MessageModule.Instance.SendEvent(new SceneLoadStartEvent { SceneName = sceneName });
+            MessageModule.Instance.SendEvent(new EventSceneLoadStart { SceneName = sceneName });
 
             // Step 1: 加载桥场景。过渡期间的动画等临时资源放入此场景，
             //         后续卸载桥场景时 Unity 自动清理，无需 ResourceModule 追踪。
@@ -79,7 +79,7 @@ namespace AIProject.Core
             while (!loadOp.isDone)
             {
                 transition.OnProgress(loadOp.progress);
-                MessageModule.Instance.SendEvent(new SceneLoadProgressEvent
+                MessageModule.Instance.SendEvent(new EventSceneLoadProgress
                 {
                     SceneName = sceneName,
                     Progress = loadOp.progress
@@ -101,7 +101,7 @@ namespace AIProject.Core
             _currentScene = sceneName;
 
             ResourceModule.Instance.FlushCache();
-            MessageModule.Instance.SendEvent(new SceneLoadCompleteEvent { SceneName = sceneName });
+            MessageModule.Instance.SendEvent(new EventSceneLoadComplete { SceneName = sceneName });
         }
 
         // ===== 叠加场景 =====

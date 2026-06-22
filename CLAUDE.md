@@ -114,6 +114,8 @@ void Awake() => GameManager.Instance.RegisterModule(this);
 
 ### 代码规范
 - 错误处理只用 `Debug.LogError`，**禁止** `UnityEditor.EditorApplication.isPaused`（由 Unity ErrorPause 控制暂停）
+- **事件类型以 `Event` 为前缀**（如 `EventSceneLoadStart`），不使用后缀。方便 IDE 补全时输入 `Event` 列出所有事件类型
+- MessageModule 事件类型必须是 struct（值类型），防止订阅者意外修改数据影响后续订阅者
 
 ### 模块开发
 - 模块命名以 `Module` 结尾，继承 `GameModule` 基类

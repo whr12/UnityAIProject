@@ -36,7 +36,7 @@ namespace AIProject.Core
         /// <summary>
         /// 注册事件。
         /// </summary>
-        public void AddEvent<T>(Action<T> handler)
+        public void AddEvent<T>(Action<T> handler) where T : struct
         {
             var type = typeof(T);
             if (!_subscribers.ContainsKey(type))
@@ -53,7 +53,7 @@ namespace AIProject.Core
         /// <summary>
         /// 注销事件。
         /// </summary>
-        public void RemoveEvent<T>(Action<T> handler)
+        public void RemoveEvent<T>(Action<T> handler) where T : struct
         {
             var type = typeof(T);
             if (_subscribers.TryGetValue(type, out var list))
@@ -69,7 +69,7 @@ namespace AIProject.Core
         /// <summary>
         /// 发送事件。同步调用所有注册的处理器。
         /// </summary>
-        public void SendEvent<T>(T message)
+        public void SendEvent<T>(T message) where T : struct
         {
             var type = typeof(T);
             if (!_subscribers.TryGetValue(type, out var list) || list.Count == 0)

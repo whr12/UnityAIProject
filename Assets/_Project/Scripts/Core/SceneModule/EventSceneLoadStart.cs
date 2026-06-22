@@ -1,6 +1,6 @@
 namespace AIProject.Core
 {
-    public struct SceneLoadCompleteEvent
+    public struct EventSceneLoadStart
     {
         public string SceneName;
     }
