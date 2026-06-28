@@ -38,6 +38,20 @@ namespace AIProject.Core
 
         public override void PostInitialize() { }
 
+        // ===== Provider 切换（预留，未来 AssetBundle 热更时使用） =====
+
+        /// <summary>
+        /// 切换资源加载方式。调用前会清空当前缓存。
+        /// 预留接口，当前仅 ResourcesAssetProvider 一种实现。
+        /// </summary>
+        public void SetProvider(IAssetProvider provider)
+        {
+            if (provider == null) return;
+            FlushCache();
+            _provider = provider;
+            Debug.Log($"[Resource] Provider 切换: {provider.GetType().Name}");
+        }
+
         public override void Release()
         {
             // 全部清理

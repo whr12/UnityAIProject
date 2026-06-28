@@ -106,6 +106,58 @@ RegisterModule(new MessageModule());  // 继承 GameModule
 void Awake() => GameManager.Instance.RegisterModule(this);
 ```
 
+## 目录管理规则（全局）
+
+### 核心原则
+
+1. **事前归类、一步到位** — 创建前判断归属，目录命名一次定下，**永不搬迁**
+2. **不设兜底目录** — 没有 `Tools/`、`Utils/`、`Misc/` 之类模糊目录
+3. **归属不清先讨论** — 宁可暂停，不强行塞。讨论过程本身就是明确功能边界
+
+```
+新文件/资源 → 运行时对应系统是什么？
+  ├─ 有明确领域 → 放入对应目录
+  └─ 无法归类？ → 先讨论，不创建
+```
+
+### 脚本目录（Scripts/）
+
+| 目录 | 归属判断 |
+|------|----------|
+| `Core/{ModuleName}/` | 框架级模块（GameModule 子类及其辅助类） |
+| `Gameplay/` | 游戏玩法逻辑（角色、AI、战斗等） |
+| `UI/` | UI 面板逻辑（UIPanel 子类）、UI 组件 |
+| `Utils/` | **纯工具类**，无状态、无模块依赖（如扩展方法、数学库） |
+| `Editor/{领域}/` | 按决策树分类，见 Editor 目录规则 |
+
+### 资源目录（Art/ Audio/ Prefabs/）
+
+| 目录 | 子目录 | 归属判断 |
+|------|------|----------|
+| `Art/Materials/` | 按效果/场景分 | 材质球 |
+| `Art/Models/` | Characters/ Environment/ Props/ | 3D 模型 |
+| `Art/Textures/` | 跟随 Model 或 UI 路径 | 贴图 |
+| `Art/Shaders/` | 按用途分 | Shader 文件 |
+| `Art/Animations/` | Characters/ UI/ Effects/ | 动画 Clip / Controller |
+| `Art/UI/` | 按面板/组件分 | UI 专属美术资源 |
+| `Audio/Music/` | — | BGM |
+| `Audio/SFX/` | UI/ Gameplay/ Ambient/ | 音效 |
+| `Prefabs/Characters/` | — | 角色预制体 |
+| `Prefabs/Environment/` | — | 场景物件 |
+| `Prefabs/UI/` | 按面板名 | UI 预制体（当前 MainMenuPanel.prefab） |
+| `Prefabs/Effects/` | — | 粒子/特效 |
+
+### 顶层文件（ScriptableObjects/ Settings/ Scenes/ ThirdParty/）
+
+| 目录 | 归属判断 |
+|------|----------|
+| `ScriptableObjects/` | 数据资产，按功能子目录 |
+| `Settings/` | 项目级配置资产 |
+| `Scenes/` | 场景文件，一个场景一个目录（场景 + 关联的专属资源） |
+| `ThirdParty/` | 第三方插件和资源，保持原目录结构 |
+
+---
+
 ## 项目规则（随 git 同步）
 
 ### Git 操作
@@ -116,11 +168,40 @@ void Awake() => GameManager.Instance.RegisterModule(this);
 - 错误处理只用 `Debug.LogError`，**禁止** `UnityEditor.EditorApplication.isPaused`（由 Unity ErrorPause 控制暂停）
 - **事件类型以 `Event` 为前缀**（如 `EventSceneLoadStart`），不使用后缀。方便 IDE 补全时输入 `Event` 列出所有事件类型
 - MessageModule 事件类型必须是 struct（值类型），防止订阅者意外修改数据影响后续订阅者
+- **不使用 `internal` 访问修饰符**，需要跨程序集（如 Editor 访问运行时代码）时直接使用 `public`。已有代码不做调整
 
 ### 模块开发
 - 模块命名以 `Module` 结尾，继承 `GameModule` 基类
 - 每个模块独立文件夹，辅助类就近存放
 - 按需实现 `IUpdatable` / `IFixedUpdatable`
+
+### Editor 目录规则
+
+Editor 脚本按功能分子目录，**事前归类、一步到位，不搬迁**。
+
+**决策树：编辑器工具，运行时对应系统是？**
+
+```
+├─ Core 模块相关     → Editor/CoreModuleName/   （如 Editor/UIModule/）
+├─ UI 面板/组件      → Editor/UI/               （当前：UIPrefabGenerator）
+├─ 场景/关卡         → Editor/Scene/
+├─ 构建/发布         → Editor/Build/
+├─ 资源导入/管线     → Editor/AssetPipeline/    （AssetPostprocessor 等）
+├─ 开发者调试        → Editor/Debug/            （控制台、Debug 工具）
+└─ 无法归类？        → ⚠ 先和我讨论，不设兜底目录
+```
+
+| 规则 | 说明 |
+|------|------|
+| **事前归类** | 创建文件前先判断归属，目录一步到位 |
+| **不搬迁** | 禁止事后"文件多了一个新目录移过去"，保护 git 历史 |
+| **不设兜底** | 没有 `Tools/` 或 `Utils/` 命名空间。归属不清则讨论 |
+| 命名无强制后缀 | 如 `UIPrefabGenerator.cs`，不需要 `Editor` 后缀 |
+| 目录名 PascalCase | 首字母大写 |
+| Editor → 运行时 | ✅ 可引用 `Core/`、`Gameplay/`、`UI/`、`Utils/` |
+| 运行时 → Editor | ❌ 运行时禁止引用 Editor 目录下的任何类型 |
+
+> **归属不清晰时的讨论，是为了提醒开发者在创建工具前先明确功能的领域边界。**
 
 ### 初始化
 - 注册顺序 = 初始化顺序

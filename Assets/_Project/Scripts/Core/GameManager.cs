@@ -31,6 +31,7 @@ namespace AIProject.Core
             RegisterModule(new CoroutineModule());
             RegisterModule(new ResourceModule());
             RegisterModule(new SceneModule());
+            RegisterModule(new UIModule());
 
             BootstrapModules();
         }
@@ -128,6 +129,9 @@ namespace AIProject.Core
             }
 
             Debug.Log($"[GameManager] Bootstrap 完成。{_modules.Count} 个模块就绪。");
+
+            // 切入首个业务场景
+            SceneModule.Instance.LoadScene("BootstrapScene");
         }
 
         // ===== Release =====
